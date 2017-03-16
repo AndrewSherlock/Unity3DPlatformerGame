@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4598245741983794}
   - component: {fileID: 64191669593603976}
   - component: {fileID: 114127222051247306}
+  - component: {fileID: 114283957616532698}
   m_Layer: 0
   m_Name: SawCollider
   m_TagString: Untagged
@@ -66,7 +67,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1556642965136588}
   m_LocalRotation: {x: -0.00000003774895, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.5331247, y: 4.0568047, z: 4.2458262}
+  m_LocalPosition: {x: -4.049, y: 7.06, z: 4.9}
   m_LocalScale: {x: 2.5, y: 2.5, z: 0.8}
   m_Children:
   - {fileID: 4515781633668036}
@@ -137,6 +138,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spinSpeed: 120
+  xSpin: 0
+  ySpin: 0
+  zSpin: 1
 --- !u!114 &114217535549450574
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -149,3 +153,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spinSpeed: 80
+  xSpin: 0
+  ySpin: 0
+  zSpin: 0
+--- !u!114 &114283957616532698
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1556642965136588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2c54135163c49e4c9fdb4d0dccc8107, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  positionsToMoveTo:
+  - {x: 1.53, y: 4.98, z: 4.9}
+  - {x: -4.049, y: 4.98, z: 4.9}
+  - {x: -4.049, y: 7.06, z: 4.9}
+  isReversible: 1
+  delay: 0.3
+  moveSpeed: 3

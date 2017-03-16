@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI; 
 
 public class WayPointSystem : MonoBehaviour {
 
@@ -13,50 +14,67 @@ public class WayPointSystem : MonoBehaviour {
     bool movingBackwards;
     int nextPos = 1;
 
+    public bool active;
+
 	// Use this for initialization
 	void Start () {
         movingToNextPoint = true;
-
     }
 	
 	// Update is called once per frame
 	void Update () {
-        if (movingToNextPoint)
+        if (active)
         {
-            if (!movingBackwards)
+            if (movingToNextPoint)
             {
-                if(transform.position == positionsToMoveTo[nextPos])
+
+                if (transform.position == positionsToMoveTo[nextPos]) // TEST MUST CHANGE
                 {
                     movingToNextPoint = false;
-                }
-
-                transform.position = Vector3.MoveTowards(transform.position,positionsToMoveTo[nextPos], moveSpeed * Time.deltaTime);
-
-                if(nextPos == positionsToMoveTo.Length)
-                {
-                    if (isReversible)
-                    {
-                        moveBackwards();
-                    } else
-                    {
-                        nextPos = 0;
-                        moveForward();
-                    }
                 }
                 else
                 {
-                    moveForward();
+                    transform.position = Vector3.MoveTowards(transform.position, positionsToMoveTo[nextPos], 2f * Time.deltaTime);
                 }
             }
-            else
+
+            if (!movingToNextPoint)
             {
-                if (transform.position == positionsToMoveTo[nextPos])
+                if (nextPos == positionsToMoveTo.Length - 1)
                 {
-                    movingToNextPoint = false;
+                    if (isReversible && transform.position == positionsToMoveTo[nextPos])
+                    {
+                        movingBackwards = true;
+                        moveBackwards();
+                    }
+                    else if (transform.position == positionsToMoveTo[nextPos])
+                    {
+                        nextPos = 0;
+                        StartCoroutine(MoveToPointDelay(delay));
+                    }
+                }
+
+                if (movingBackwards && nextPos == 0)
+                {
+                    if (transform.position == positionsToMoveTo[nextPos])
+                    {
+                        movingBackwards = false;
+                        moveForward();
+                    }
+                }
+
+                if (!movingBackwards && transform.position == positionsToMoveTo[nextPos] && nextPos != positionsToMoveTo.Length - 1)
+                {
+                    moveForward();
+                }
+
+                if (movingBackwards && transform.position == positionsToMoveTo[nextPos] && nextPos != 0)
+                {
+                    moveBackwards();
                 }
             }
         }
-	}
+    }
 
     void moveForward() {
         nextPos++;
@@ -65,7 +83,8 @@ public class WayPointSystem : MonoBehaviour {
 
     void moveBackwards()
     {
-
+        nextPos--;
+        StartCoroutine(MoveToPointDelay(delay));
     }
 
     IEnumerator MoveToPointDelay(float delay)

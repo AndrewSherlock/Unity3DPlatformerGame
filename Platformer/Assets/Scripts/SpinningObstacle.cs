@@ -5,19 +5,35 @@ using UnityEngine;
 public class SpinningObstacle : MonoBehaviour {
 
     public float spinSpeed;
-	// Use this for initialization
-	void Start () {
+
+    public bool xSpin;
+    public bool ySpin;
+    public bool zSpin;
+
+    // Use this for initialization
+    void Start () {
 		
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        //transform.Rotate(Vector3.forward * spinSpeed * Time.deltaTime);
         RotateObject();
-        
     }
 
     void RotateObject()
     {
-        transform.Rotate(Vector3.forward * spinSpeed * Time.deltaTime);
+        if (zSpin)
+        {
+            transform.Rotate(Vector3.forward * spinSpeed * Time.deltaTime);
+        }
+        if (ySpin)
+        {
+            transform.Rotate(Vector3.up * spinSpeed * Time.deltaTime);
+        }
+        if (xSpin)
+        {
+            transform.Rotate(Vector3.left * spinSpeed * Time.deltaTime);
+        }
     }
 }

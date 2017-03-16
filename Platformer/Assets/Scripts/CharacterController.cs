@@ -60,7 +60,6 @@ public class CharacterController : MonoBehaviour {
 
             rb.velocity = new Vector3(xInput * currentSpeed, rb.velocity.y, ZInput * currentSpeed);
         }
-        Debug.Log(climbing);
     }
 
    
