@@ -4,8 +4,8 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 public class CharacterController : MonoBehaviour {
-
-    Rigidbody rb;
+    [HideInInspector]
+    public Rigidbody rb;
     Collider col;
 
     Vector3 velocity;
@@ -27,7 +27,14 @@ public class CharacterController : MonoBehaviour {
 
     bool climbing = false;
     public float climbSpeed;
-  
+
+    public GameObject playerObject;
+    Vector3 lastMovement;
+    public Vector3 lastRot;
+
+    PlayerStatDetails playerStats;
+
+    public bool canMoveAfterSpawn = false;
 
     void Start () {
         rb = GetComponent<Rigidbody>();
@@ -36,7 +43,7 @@ public class CharacterController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (!climbing)
+        if (!climbing && canMoveAfterSpawn)
         {
             float xInput = Input.GetAxisRaw("Horizontal");
             float ZInput = Input.GetAxisRaw("Vertical");
@@ -58,11 +65,11 @@ public class CharacterController : MonoBehaviour {
 
             }
 
-            rb.velocity = new Vector3(xInput * currentSpeed, rb.velocity.y, ZInput * currentSpeed);
+            Vector3 moveTarget = new Vector3(xInput * currentSpeed, rb.velocity.y, ZInput * currentSpeed);
+            GetFacingDirection(new Vector3 (xInput, 0, ZInput), moveTarget);
+            rb.velocity = moveTarget;
         }
     }
-
-   
 
     private void FixedUpdate() // will miss input, move input to another method, maybe use booleans
     {
@@ -93,6 +100,12 @@ public class CharacterController : MonoBehaviour {
         }
     }
 
+    public void StopVelocity()
+    {
+        rb.useGravity = false;
+        rb.velocity = Vector3.zero;
+    }
+
     float SlowPlayerDown(float currentSpeed)
     {
         if(currentSpeed > 6f)
@@ -104,6 +117,21 @@ public class CharacterController : MonoBehaviour {
             currentSpeed -= .6f;
         }
         return currentSpeed;
+    }
+
+    void GetFacingDirection(Vector3 movementInput, Vector3 movementAmount)
+    { // works enough for now, snaps in certain directions 
+        if (movementInput.x != 0 || movementInput.z != 0)
+        {
+            Vector3 lookDirection = new Vector3(movementAmount.x, 0, movementAmount.z);
+            lastMovement = movementInput;
+            playerObject.transform.rotation = Quaternion.LookRotation(lookDirection);
+            lastRot = lookDirection;
+        }
+        else
+        {
+            playerObject.transform.rotation = Quaternion.LookRotation(lastRot);
+        }
     }
 
     float PlayerSpeed(float currentSpeed, float maxSpeed)
@@ -154,12 +182,12 @@ public class CharacterController : MonoBehaviour {
             isJumping = false;
             hasDoubleJumped = false;
             hasReleasedJumpKey = false;
+            canMoveAfterSpawn = true;
         }
     }
 
     private void OnTriggerStay(Collider other)
     {
-        Debug.Log(other.name);
         if(other.tag == "Climbable")
         {
             ClimbObject(other);

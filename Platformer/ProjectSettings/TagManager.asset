@@ -8,6 +8,7 @@ TagManager:
   - Climbable
   - Ground
   - HitObject
+  - Enemy
   layers:
   - Default
   - TransparentFX

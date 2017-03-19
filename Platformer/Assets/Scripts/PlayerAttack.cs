@@ -38,7 +38,7 @@ public class PlayerAttack : MonoBehaviour {
         {
             case "BoardsContainer": HandleBoardObj(obj.gameObject);
                 break;
-            default: Debug.Log("Shouldnt be seen ever");
+            default: Debug.Log(obj.name);
                 break;
         }
     }

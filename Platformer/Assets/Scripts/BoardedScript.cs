@@ -12,6 +12,8 @@ public class BoardedScript : MonoBehaviour {
     int currentHit = -1;
     public Material mat; // temp
 
+    PlayerUISystem playerUi;
+
     void ChangeObjectMesh()
     {
         GameObject newMesh = boards[currentHit];
@@ -65,6 +67,12 @@ public class BoardedScript : MonoBehaviour {
         Destroy(deb);
     }
 
+    IEnumerator AddObjectDestructionDelay()
+    {
+        yield return new WaitForSeconds(8);
+        Destroy(gameObject);
+    }
+
     public void AddToDamage()
     {
         currentHit++;
@@ -73,11 +81,29 @@ public class BoardedScript : MonoBehaviour {
         if(currentHit == 4)
         {
             Destroy(currentObject);
-            Destroy(gameObject);
+            StartCoroutine(AddObjectDestructionDelay());
         }
         else
         {
             ChangeObjectMesh();
+        }
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "Player")
+        {
+            playerUi = other.GetComponent<PlayerUISystem>();
+            playerUi.DisplayMessageToPlayer("Enter X to break boards");
+        }
+    }
+
+    public void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            playerUi.MoveTextBack();
+            playerUi = null;
         }
     }
 }
